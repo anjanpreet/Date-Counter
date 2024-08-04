@@ -53,11 +53,30 @@ function DateMessage() {
 
 function Step() {
   const { step, setStep } = useStep();
+  const handleSliderChange = (e) => {
+    const value = parseInt(e.target.value);
+    setStep(value);
+    setStep((prevStep) => prevStep + 1); // Increase step value when moving the slider
+  };
+
+  function handleReset() {
+    setStep(0);
+  }
   return (
     <>
       <Button onClick={() => setStep((step) => step + 1)}>+</Button>
-      <span>Step: {step}</span>
-      <Button onClick={() => setStep((step) => step - 1)}>-</Button>
+      <label>Step: {step}</label>
+      <input
+        type="range"
+        min="1"
+        value={step}
+        id="stepRange"
+        onChange={handleSliderChange}
+      />
+      <Button onClick={() => (step > 0 ? setStep((step) => step - 1) : null)}>
+        -
+      </Button>
+      {step > 0 ? <Button onClick={handleReset}>Reset</Button> : null}
     </>
   );
 }
@@ -65,6 +84,9 @@ function Step() {
 function Count() {
   const { step } = useStep();
   const { count, setCount } = useStep();
+  if (step === 0) {
+    setCount(0);
+  }
   return (
     <>
       <Button onClick={() => setCount((count) => count + step)}>+</Button>
